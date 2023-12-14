@@ -23,13 +23,33 @@ func TestPart1TestInput(t *testing.T) {
 func TestPart1Input(t *testing.T) {
 	input := utils.ReadFileAsSlice("input.txt")
 
-	sumAll := diceGame(input, Set{red: 12, green: 13, blue: 14})
+	sumAll := part1(input, Set{red: 12, green: 13, blue: 14})
 
-	if sumAll != 0 {
+	if sumAll != 2563 {
 		t.Errorf("was %d", sumAll)
 	}
 }
 
 func TestPart2TestInput(t *testing.T) {
-	
+	testInput := []string{"Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
+		"Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
+		"Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
+		"Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
+		"Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"}
+
+	power := part2(testInput)
+
+	if power != 2286 {
+		t.Errorf("was %d", power)
+	}
+}
+
+func TestPart2Input(t *testing.T) {
+	input := utils.ReadFileAsSlice("input.txt")
+
+	sumAll := part2(input)
+
+	if sumAll != 70768 {
+		t.Errorf("was %d", sumAll)
+	}
 }

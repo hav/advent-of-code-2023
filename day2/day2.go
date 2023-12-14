@@ -38,6 +38,27 @@ func (g Game) isPossible(limitSet Set) bool {
 	return isPossible
 }
 
+func (g Game) maxSet() Set {
+	maxSet := Set{}
+	for _, set := range g.sets {
+		if set.red > maxSet.red {
+			maxSet.red = set.red
+		}
+		if set.green > maxSet.green {
+			maxSet.green = set.green
+		}
+		if set.blue > maxSet.blue {
+			maxSet.blue = set.blue
+		}
+	}
+	return maxSet
+}
+
+func (g Game) power() int {
+	maxSet := g.maxSet()
+	return maxSet.red * maxSet.green * maxSet.blue
+}
+
 var gameRe = regexp.MustCompile(`Game ([0-9]+): (.+)`)
 var setRe = regexp.MustCompile(`(([0-9]+) ([bdeglnru]+))`)
 
@@ -85,4 +106,14 @@ func part1(input []string, limit Set) int {
 		}
 	}
 	return sumAll
+}
+
+func part2(input []string) int {
+	games := parseGames(input)
+	power := 0
+	for _, v := range games {
+		power += v.power()
+	}
+
+	return power
 }
