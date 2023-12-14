@@ -12,7 +12,7 @@ func Check(e error) {
 	}
 }
 
-func convertToInt(s string) int {
+func ConvertToInt(s string) int {
 	x, _ := strconv.Atoi(s)
 	return x
 }
