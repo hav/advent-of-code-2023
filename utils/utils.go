@@ -6,12 +6,6 @@ import (
 	"strconv"
 )
 
-func Check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func ConvertToInt(s string) int {
 	x, _ := strconv.Atoi(s)
 	return x
@@ -26,14 +20,12 @@ func SumIntSlice(slice []int) int {
 }
 
 func ReadFile(fileName string) string {
-	input, err := os.ReadFile(fileName)
-	Check(err)
+	input, _ := os.ReadFile(fileName)
 	return string(input)
 }
 
 func ReadFileAsSlice(fileName string) []string {
-	input, err := os.Open(fileName)
-	Check(err)
+	input, _ := os.Open(fileName)
 	defer input.Close()
 	lines := []string{}
 	scanner := bufio.NewScanner(input)
