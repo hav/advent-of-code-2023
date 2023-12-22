@@ -10,6 +10,20 @@ import (
 var numberRegex = regexp.MustCompile(`([0-9]+)`)
 var symbolRegex = regexp.MustCompile(`([^\.0-9])`)
 
+func figureOutIndexes(inputIdx, inputLen int) []int {
+	// figure out which lines to look for symbols in
+	inputIdxsToCheck := []int{inputIdx - 1, inputIdx, inputIdx + 1}
+
+	switch inputIdx {
+	case 0:
+		inputIdxsToCheck = inputIdxsToCheck[1:]
+	case inputLen - 1:
+		inputIdxsToCheck = inputIdxsToCheck[:len(inputIdxsToCheck)-1]
+	}
+
+	return inputIdxsToCheck
+}
+
 type Part struct {
 	part       string
 	firstIndex int
@@ -46,15 +60,7 @@ func part1(input []string) int {
 
 		for _, partIdxs := range potentialPartIdxs {
 			pp := Part{part: line[partIdxs[0]:partIdxs[1]], firstIndex: partIdxs[0], lastIndex: partIdxs[1]}
-			inputIdxsToCheck := []int{inputIdx - 1, inputIdx, inputIdx + 1}
-
-			// figure out which lines to look for symbols in
-			switch inputIdx {
-			case 0:
-				inputIdxsToCheck = inputIdxsToCheck[1:]
-			case len(input) - 1:
-				inputIdxsToCheck = inputIdxsToCheck[:len(inputIdxsToCheck)-1]
-			}
+			inputIdxsToCheck := figureOutIndexes(inputIdx, len(input))
 
 			for _, inputLineIndex := range inputIdxsToCheck {
 				if ok, symbol, symbolIdx := pp.isPart(input[inputLineIndex]); ok {
@@ -71,32 +77,35 @@ func part1(input []string) int {
 type Gear struct {
 	firstIndex int
 	lastIndex  int
-	lineIndex  int
 	parts      map[Part]bool
 }
 
 func (g Gear) calculateRatio() int {
-	keys := make([]Part, 0, len(g.parts))
-	for p := range g.parts {
-		keys = append(keys, p)
+	if len(g.parts) == 2 {
+		keys := make([]Part, 0, len(g.parts))
+		for p := range g.parts {
+			keys = append(keys, p)
+		}
+
+		ratio := utils.ConvertToInt(keys[0].part) * utils.ConvertToInt(keys[1].part)
+		// fmt.Println("Gear", g, "has ratio", ratio)
+		return ratio
 	}
 
-	ratio := utils.ConvertToInt(keys[0].part) * utils.ConvertToInt(keys[1].part)
-	// fmt.Println("Gear", g, "has ratio", ratio)
-	return ratio
+	return 0
 }
 
-func createGear(gear []int, line string, inputIdx int) Gear {
+func createGear(gear []int, line string) Gear {
 	startIndex := gear[0] - 1
-	endIndex := gear[1]
+	lastIndex := gear[1]
 	if gear[0] == 0 {
 		startIndex = 0
 	}
 
 	if gear[1] == len(line)-1 {
-		endIndex = len(line)
+		lastIndex = len(line)
 	}
-	return Gear{firstIndex: startIndex, lastIndex: endIndex, parts: map[Part]bool{}, lineIndex: inputIdx + 1}
+	return Gear{firstIndex: startIndex, lastIndex: lastIndex, parts: map[Part]bool{}}
 }
 
 func (g Gear) isGearPart(firstIndex, lastIndex int) bool {
@@ -114,16 +123,8 @@ func part2(input []string) int {
 	for inputIdx, line := range input {
 		gears := symbolRegex.FindAllStringIndex(line, -1)
 		for _, gear := range gears {
-			g := createGear(gear, line, inputIdx)
-			inputIdxsToCheck := []int{inputIdx - 1, inputIdx, inputIdx + 1}
-
-			// figure out which lines to look for symbols in
-			switch inputIdx {
-			case 0:
-				inputIdxsToCheck = inputIdxsToCheck[1:]
-			case len(input) - 1:
-				inputIdxsToCheck = inputIdxsToCheck[:len(inputIdxsToCheck)-1]
-			}
+			g := createGear(gear, line)
+			inputIdxsToCheck := figureOutIndexes(inputIdx, len(input))
 
 			for _, inputLine := range inputIdxsToCheck {
 				potentialParts := numberRegex.FindAllStringIndex(input[inputLine], -1)
@@ -135,12 +136,7 @@ func part2(input []string) int {
 				}
 			}
 
-			if len(g.parts) == 2 {
-				// fmt.Printf("Gear at %v on line %d because we found parts %v close to it\n", []int{g.firstIndex, g.lastIndex}, inputIdx+1, g.parts)
-				totalRatio += g.calculateRatio()
-				// fmt.Println("Ratio is now", totalRatio)
-			}
-			// fmt.Println()
+			totalRatio += g.calculateRatio()
 		}
 	}
 	return totalRatio

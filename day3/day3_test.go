@@ -28,7 +28,7 @@ func TestPart1(t *testing.T) {
 			expected: 4361,
 		},
 		{
-			desc:     "puzzle",
+			desc:     "puzzleInput",
 			input:    utils.ReadFileAsSlice("input.txt"),
 			expected: 529618,
 		},
@@ -37,7 +37,7 @@ func TestPart1(t *testing.T) {
 		t.Run(tC.desc, func(t *testing.T) {
 			partsSum := part1(tC.input)
 			if partsSum != tC.expected {
-				t.Errorf("was %d", partsSum)
+				t.Errorf("Error, was %d but should be %d", partsSum, tC.expected)
 			}
 		})
 	}
@@ -50,7 +50,7 @@ func TestPart2(t *testing.T) {
 		expected int
 	}{
 		{
-			desc: "test",
+			desc: "testInput",
 			input: []string{
 				"467..114..",
 				"...*......",
@@ -65,7 +65,7 @@ func TestPart2(t *testing.T) {
 			expected: 467835,
 		},
 		{
-			desc:     "puzzle",
+			desc:     "puzzleInput",
 			input:    utils.ReadFileAsSlice("input.txt"),
 			expected: 77509019,
 		},
@@ -74,43 +74,9 @@ func TestPart2(t *testing.T) {
 		t.Run(tC.desc, func(t *testing.T) {
 			partsSum := part2(tC.input)
 			if partsSum != tC.expected {
-				t.Errorf("was %d", partsSum)
+				t.Errorf("Error, was %d but should be %d", partsSum, tC.expected)
 			}
 
 		})
 	}
 }
-
-// func TestPart2TestInput(t *testing.T) {
-// 	input := []string{
-// 		"467..114..",
-// 		"...*......",
-// 		"..35..633.",
-// 		"......#...",
-// 		"617*......",
-// 		".....+.58.",
-// 		"..592.....",
-// 		"......755.",
-// 		"...$.*....",
-// 		".664.598.."}
-
-// 	// input := []string{
-// 	// 	"...*...",
-// 	// 	"432.997"}
-
-// 	partsSum := part2(input)
-
-// 	if partsSum != 467835 {
-// 		t.Errorf("was %d", partsSum)
-// 	}
-// }
-
-// func TestPart2Input(t *testing.T) {
-// 	input := utils.ReadFileAsSlice("input.txt")
-
-// 	partsSum := part2(input)
-
-// 	if partsSum != 70104392 {
-// 		t.Errorf("was %d", partsSum)
-// 	}
-// }
